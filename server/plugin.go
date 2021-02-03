@@ -180,12 +180,14 @@ func (p *Plugin) updateJwtUserInfo(jwtToken string, user *model.User) (string, e
 
 func (p *Plugin) startMeeting(user *model.User, channel *model.Channel, meetingID string, meetingTopic string, personal bool, rootID string) (string, error) {
 	l := p.b.GetServerLocalizer()
+	userConfig, err := p.getUserConfig(user.Id)
+
 	if meetingID == "" {
 		meetingID = encodeJitsiMeetingID(meetingTopic)
-		if meetingID != "" {
-			meetingID += "-"
-		}
-		meetingID += randomString(LETTERS, 20)
+		// if meetingID != "" {
+		// 	meetingID += "-"
+		// }
+		// meetingID += randomString(LETTERS, 20)
 	}
 	meetingPersonal := false
 	defaultMeetingTopic := p.b.LocalizeDefaultMessage(l, &i18n.Message{
@@ -194,7 +196,6 @@ func (p *Plugin) startMeeting(user *model.User, channel *model.Channel, meetingI
 	})
 
 	if len(meetingTopic) < 1 {
-		userConfig, err := p.getUserConfig(user.Id)
 		if err != nil {
 			return "", err
 		}
